@@ -8,15 +8,17 @@ namespace Dialogue
         #region Fields
         public readonly IDialogueLine Line;
         public readonly DialogueNodeId Target;
+        public readonly bool PushToStack;
 
         IDialogueLine IDialogueChoice.Line => this.Line;
         #endregion
 
         #region Constructor
-        public GotoNodeChoice(IDialogueLine line, DialogueNodeId? target)
+        public GotoNodeChoice(IDialogueLine line, DialogueNodeId? target, bool pushToStack)
         {
             this.Line = line;
             this.Target = target ?? DialogueNodeId.Empty;
+            this.PushToStack = pushToStack;
         }
         #endregion
 

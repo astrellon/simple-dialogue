@@ -11,6 +11,8 @@ namespace Dialogue
         public DialogueNode? Current = null;
         private int currentLineIndex = 0;
         private readonly Dictionary<DialogueNodeId, DialogueNode> knownNodes = new Dictionary<DialogueNodeId, DialogueNode>();
+
+        private Queue<DialogueTreeStack> stack = new Queue<DialogueTreeStack>();
         #endregion
 
         #region Constructor
@@ -38,11 +40,48 @@ namespace Dialogue
             this.GotoNode(node);
         }
 
+        public void PushNode(DialogueNodeId id)
+        {
+            if (this.knownNodes.TryGetValue(id, out var node))
+            {
+                this.PushNode(node);
+            }
+            else
+            {
+                this.GotoNode(null);
+            }
+        }
+
+        public void PushNode(DialogueNode node)
+        {
+            if (this.Current != null)
+            {
+                this.stack.Enqueue(new DialogueTreeStack(this.Current, this.currentLineIndex));
+            }
+
+            this.GotoNode(node);
+        }
+
+        public bool PopStack()
+        {
+            if (this.stack.TryDequeue(out var stackItem))
+            {
+                this.Current = stackItem.Node;
+                this.currentLineIndex = stackItem.LineIndex;
+                return true;
+            }
+
+            return false;
+        }
+
         public DialogueCurrent Continue()
         {
             if (this.Current == null)
             {
-                return DialogueCurrent.End;
+                if (!this.PopStack())
+                {
+                    return DialogueCurrent.End;
+                }
             }
 
             var lines = this.Current.Lines;

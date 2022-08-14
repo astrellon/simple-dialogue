@@ -24,9 +24,9 @@ namespace Dialogue
             lines.Add(new DialogueLine(self, new []{ new DialogueTextSegment("What can I do for you today?")}));
 
             var choices = new List<IDialogueChoice>();
-            choices.Add(new GotoNodeChoice(new DialogueLine(new [] { new DialogueTextSegment("Open Shop")}), null));
-            choices.Add(new GotoNodeChoice(new DialogueLine(new [] { new DialogueTextSegment("Questions")}), node2.Id));
-            choices.Add(new GotoNodeChoice(new DialogueLine(new [] { new DialogueTextSegment("Bye")}), null));
+            choices.Add(new GotoNodeChoice(new DialogueLine(new [] { new DialogueTextSegment("Open Shop")}), null, false));
+            choices.Add(new GotoNodeChoice(new DialogueLine(new [] { new DialogueTextSegment("Questions")}), node2.Id, true));
+            choices.Add(new GotoNodeChoice(new DialogueLine(new [] { new DialogueTextSegment("Bye")}), null, false));
 
             var node = new DialogueNode(new DialogueNodeId("StartNode"), lines, choices);
 
