@@ -10,6 +10,7 @@ namespace Dialogue
         public DialogueNode? Start = null;
         public DialogueNode? Current = null;
         private int currentLineIndex = 0;
+        private readonly Dictionary<DialogueNodeId, DialogueNode> knownNodes = new Dictionary<DialogueNodeId, DialogueNode>();
         #endregion
 
         #region Constructor
@@ -20,9 +21,21 @@ namespace Dialogue
         #endregion
 
         #region Methods
+        public void AddKnownNode(DialogueNode node)
+        {
+            this.knownNodes[node.Id] = node;
+        }
+
         public void GotoNode(DialogueNode? node)
         {
             this.Current = node;
+            this.currentLineIndex = 0;
+        }
+
+        public void GotoNode(DialogueNodeId id)
+        {
+            this.knownNodes.TryGetValue(id, out var node);
+            this.GotoNode(node);
         }
 
         public DialogueCurrent Continue()

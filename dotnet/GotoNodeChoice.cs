@@ -7,16 +7,16 @@ namespace Dialogue
     {
         #region Fields
         public readonly IDialogueLine Line;
-        public readonly DialogueNode? Target;
+        public readonly DialogueNodeId Target;
 
         IDialogueLine IDialogueChoice.Line => this.Line;
         #endregion
 
         #region Constructor
-        public GotoNodeChoice(IDialogueLine line, DialogueNode? target)
+        public GotoNodeChoice(IDialogueLine line, DialogueNodeId? target)
         {
             this.Line = line;
-            this.Target = target;
+            this.Target = target ?? DialogueNodeId.Empty;
         }
         #endregion
 

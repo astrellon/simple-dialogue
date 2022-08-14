@@ -11,6 +11,12 @@ namespace Dialogue
         {
             var self = new DialogueActorId("SELF");
             var player = new DialogueActorId("PLAYER");
+
+            var lines2 = new List<IDialogueLine>();
+            lines2.Add(new DialogueLine(self, new [] { new DialogueTextSegment("So you have questions?")}));
+
+            var node2 = new DialogueNode(new DialogueNodeId("Questions"), lines2);
+
             var lines = new List<IDialogueLine>();
             lines.Add(new DialogueLine(self, new []{ new DialogueTextSegment("Hello there")}));
             lines.Add(new DialogueLine(player, new []{ new DialogueTextSegment("Hello "), new DialogueTextSegment("", new [] { new DialogueForActorAttribute(self)})}));
@@ -19,16 +25,14 @@ namespace Dialogue
 
             var choices = new List<IDialogueChoice>();
             choices.Add(new GotoNodeChoice(new DialogueLine(new [] { new DialogueTextSegment("Open Shop")}), null));
-            choices.Add(new GotoNodeChoice(new DialogueLine(new [] { new DialogueTextSegment("Questions")}), null));
+            choices.Add(new GotoNodeChoice(new DialogueLine(new [] { new DialogueTextSegment("Questions")}), node2.Id));
             choices.Add(new GotoNodeChoice(new DialogueLine(new [] { new DialogueTextSegment("Bye")}), null));
 
             var node = new DialogueNode(new DialogueNodeId("StartNode"), lines, choices);
 
-            lines = new List<IDialogueLine>();
-            lines.Add(new DialogueLine(self, new [] { new DialogueTextSegment("So you have questions?")}));
-
-
             var tree = new DialogueTree();
+            tree.AddKnownNode(node);
+            tree.AddKnownNode(node2);
             tree.GotoNode(node);
 
             var current = DialogueCurrent.End;
@@ -36,7 +40,7 @@ namespace Dialogue
             {
                 current = tree.Continue();
                 Console.WriteLine(MakeString(current.Line));
-            } while (!current.Choices.Any() || !current.IsEnd);
+            } while (!current.Choices.Any() && !current.IsEnd);
 
             var choiceText = current.Choices.Select(c => c.Line);
             var text = choiceText.Select(MakeString).ToList();

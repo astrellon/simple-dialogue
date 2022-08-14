@@ -5,6 +5,8 @@ namespace Dialogue
     public struct DialogueNodeId : IEquatable<string>
     {
         #region Fields
+        public static readonly DialogueNodeId Empty = new DialogueNodeId("");
+
         public readonly string Value;
         #endregion
 
